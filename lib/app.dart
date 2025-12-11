@@ -1,23 +1,27 @@
-// lib/app.dart
 import 'package:flutter/material.dart';
+import 'services/local_prefs.dart';
+import 'services/firebase_session_service.dart';
 import 'services/storage_service.dart';
-import 'services/server_service.dart';
 import 'ui/onboarding_page.dart';
 
 class MyApp extends StatelessWidget {
+  final LocalPrefs prefs = LocalPrefs();
+  final FirebaseSessionService firebase = FirebaseSessionService();
   final StorageService storage = StorageService();
-  late final ServerService server;
 
-  MyApp({super.key}) {
-    server = ServerService(storage: storage);
-  }
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Academic Assessment',
-      theme: ThemeData(primarySwatch: Colors.indigo),
-      home: OnboardingPage(storage: storage, server: server),
+      title: "Academic Assessment System",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
+      home: OnboardingPage(
+        prefs: prefs,
+        firebase: firebase,
+        storage: storage,
+      ),
     );
   }
 }

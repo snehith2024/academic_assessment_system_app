@@ -1,36 +1,37 @@
-// lib/models/session.dart
 import 'response.dart';
 
 class Session {
-  final String sessionId;
+  final String id;
   final String topic;
-  final String facultyName;
-  final int createdAt;
-  final List<StudentResponse> responses;
+  final int timestamp;
+  final List<ResponseData> responses;
 
   Session({
-    required this.sessionId,
+    required this.id,
     required this.topic,
-    required this.facultyName,
-    required this.createdAt,
+    required this.timestamp,
     required this.responses,
   });
 
+  // Computed counts
+  int get countA => responses.where((r) => r.level == "A").length;
+  int get countB => responses.where((r) => r.level == "B").length;
+  int get countC => responses.where((r) => r.level == "C").length;
+  int get countD => responses.where((r) => r.level == "D").length;
+
   Map<String, dynamic> toJson() => {
-        'sessionId': sessionId,
-        'topic': topic,
-        'facultyName': facultyName,
-        'createdAt': createdAt,
-        'responses': responses.map((r) => r.toJson()).toList(),
+        "id": id,
+        "topic": topic,
+        "timestamp": timestamp,
+        "responses": responses.map((e) => e.toJson()).toList(),
       };
 
-  factory Session.fromJson(Map<String, dynamic> j) => Session(
-        sessionId: j['sessionId'] ?? '',
-        topic: j['topic'] ?? '',
-        facultyName: j['facultyName'] ?? '',
-        createdAt: j['createdAt'] ?? 0,
-        responses: (j['responses'] as List<dynamic>? ?? [])
-            .map((e) => StudentResponse.fromJson(e as Map<String, dynamic>))
+  factory Session.fromJson(Map<String, dynamic> map) => Session(
+        id: map["id"],
+        topic: map["topic"],
+        timestamp: map["timestamp"],
+        responses: (map["responses"] as List)
+            .map((e) => ResponseData.fromJson(e))
             .toList(),
       );
 }
