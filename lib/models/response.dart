@@ -1,29 +1,36 @@
-// lib/models/response.dart
-
-class StudentResponse {
+class ResponseData {
+  final String id; // optional, Firestore doc id
   final String name;
   final String roll;
-  final String choice; // "A"/"B"/"C"/"D"
+  final String level; // A/B/C/D
   final int timestamp;
 
-  StudentResponse({
+  ResponseData({
+    this.id = '',
     required this.name,
     required this.roll,
-    required this.choice,
+    required this.level,
     required this.timestamp,
   });
 
-  Map<String, dynamic> toJson() => {
-    'name': name,
-    'roll': roll,
-    'choice': choice,
-    'timestamp': timestamp,
-  };
+  factory ResponseData.fromJson(Map<String, dynamic> m, {String id = ''}) {
+    return ResponseData(
+      id: id,
+      name: m['name'] ?? '',
+      roll: m['roll'] ?? '',
+      level: m['level'] ?? '',
+      timestamp: (m['timestamp'] is int)
+          ? m['timestamp']
+          : (m['timestamp'] is Map ? (m['timestamp']['_seconds'] ?? 0) : 0),
+    );
+  }
 
-  static StudentResponse fromJson(Map<String, dynamic> j) => StudentResponse(
-    name: j['name'] ?? '',
-    roll: j['roll'] ?? '',
-    choice: j['choice'] ?? '',
-    timestamp: j['timestamp'] ?? 0,
-  );
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'roll': roll,
+      'level': level,
+      'timestamp': timestamp,
+    };
+  }
 }

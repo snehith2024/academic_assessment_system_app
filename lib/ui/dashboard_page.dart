@@ -1,93 +1,167 @@
-// lib/ui/dashboard_page.dart
 import 'package:flutter/material.dart';
-import '../services/server_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/firebase_session_service.dart';
 import '../services/storage_service.dart';
+import '../models/response.dart';
 import '../models/session.dart';
-// optional: to open WS from flutter to local server
+import '../widgets/simple_pie_chart.dart';
+import '../widgets/response_tile.dart';
 
 class DashboardPage extends StatefulWidget {
-  final ServerService server;
-  final StorageService storage;
-  const DashboardPage({required this.server, required this.storage, super.key});
+  final String sessionId;
+  final FirebaseSessionService firebase;
+
+  const DashboardPage({
+    super.key,
+    required this.sessionId,
+    required this.firebase,
+  });
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  Session? session;
-  // counts
-  Map<String, int> counts = {'A': 0, 'B': 0, 'C': 0, 'D': 0};
+  List<ResponseData> responses = [];
+  String topic = '';
+  String faculty = '';
+  bool ended = false;
 
   @override
   void initState() {
     super.initState();
-    session = widget.server.activeSession;
-    _recalc();
-    // register a local listener: server broadcasts via WS to clients; but we are in-app server owner.
-    // For simplicity, serverService saved activeSession so we can poll from it (or add callbacks).
-    // We'll poll every 500ms (cheap). Alternatively implement a Stream in ServerService.
-    Future.doWhile(() async {
-      await Future.delayed(Duration(milliseconds: 500));
-      if (!mounted || widget.server.activeSession == null) return false;
+    _loadSessionInfo();
+    _listenResponses();
+  }
+
+  Future<void> _loadSessionInfo() async {
+    final snap = await widget.firebase.loadSessionDoc(widget.sessionId);
+    if (snap.exists) {
+      final data = snap.data()!;
       setState(() {
-        session = widget.server.activeSession;
-        _recalc();
+        topic = data["topic"] ?? "";
+        faculty = data["faculty"] ?? "";
+        ended = data["ended"] ?? false;
       });
-      return true;
+    }
+  }
+
+  void _listenResponses() {
+    widget.firebase.streamResponses(widget.sessionId).listen((snap) {
+      final list = <ResponseData>[];
+
+      for (var doc in snap.docs) {
+        final data = doc.data();
+
+        // FIXED universal timestamp conversion
+        int ts;
+        if (data["timestamp"] is int) {
+          ts = data["timestamp"];
+        } else if (data["timestamp"] is Timestamp) {
+          ts = (data["timestamp"] as Timestamp).millisecondsSinceEpoch;
+        } else {
+          ts = DateTime.now().millisecondsSinceEpoch;
+        }
+
+        list.add(ResponseData(
+          id: doc.id,
+          name: data["name"] ?? '',
+          roll: data["roll"] ?? '',
+          level: data["level"] ?? '',
+          timestamp: ts,
+        ));
+      }
+
+      setState(() => responses = list);
     });
   }
 
-  void _recalc() {
-    counts = {'A': 0, 'B': 0, 'C': 0, 'D': 0};
-    final rs = session?.responses ?? [];
-    for (final r in rs) {
-      final k = r.choice.toUpperCase();
-      if (counts.containsKey(k)) counts[k] = counts[k]! + 1;
-    }
+  int get countA => responses.where((r) => r.level == "A").length;
+  int get countB => responses.where((r) => r.level == "B").length;
+  int get countC => responses.where((r) => r.level == "C").length;
+  int get countD => responses.where((r) => r.level == "D").length;
+
+  Future<void> _endSession() async {
+    await widget.firebase.endSession(widget.sessionId);
+
+    // SAVE LOCAL BACKUP
+    final session = Session(
+      id: widget.sessionId,
+      topic: topic,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      responses: responses,
+    );
+
+    setState(() => ended = true);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Session ended & saved locally")),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final total = counts.values.fold(0, (a, b) => a + b);
     return Scaffold(
-      appBar: AppBar(title: Text('Dashboard - ${session?.topic ?? ''}')),
+      appBar: AppBar(
+        title: Text("Dashboard – $topic"),
+        actions: [
+          IconButton(
+            onPressed: ended ? null : _endSession,
+            icon: const Icon(Icons.stop),
+          )
+        ],
+      ),
       body: Padding(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Text('Total responses: $total', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 12),
-            // Simple textual "pie" representation
+            SizedBox(
+              height: 180,
+              child: SimplePieChart(
+                aCount: countA,
+                bCount: countB,
+                cCount: countC,
+                dCount: countD,
+              ),
+            ),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _statTile('A', counts['A']!),
-                _statTile('B', counts['B']!),
-                _statTile('C', counts['C']!),
-                _statTile('D', counts['D']!),
+                _countBox("A", countA, Colors.green),
+                _countBox("B", countB, Colors.blue),
+                _countBox("C", countC, Colors.orange),
+                _countBox("D", countD, Colors.red),
               ],
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 24),
             Expanded(
-                child: ListView(
-              children: (session?.responses.reversed.map((r) => ListTile(
-                            title: Text('${r.name} (${r.roll})'),
-                            subtitle: Text(
-                                'Choice ${r.choice} — ${DateTime.fromMillisecondsSinceEpoch(r.timestamp * 1000)}'),
-                          )) ??
-                      [])
-                  .toList(),
-            ))
+              child: ListView.builder(
+                itemCount: responses.length,
+                itemBuilder: (_, i) => ResponseTile(response: responses[i]),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _statTile(String label, int value) => Column(children: [
-        Text(label, style: TextStyle(fontSize: 16)),
-        SizedBox(height: 4),
-        Text(value.toString(), style: TextStyle(fontSize: 18))
-      ]);
+  Widget _countBox(String label, int count, Color color) {
+    return Container(
+      width: 70,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(label,
+              style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+          Text(count.toString(), style: const TextStyle(fontSize: 18)),
+        ],
+      ),
+    );
+  }
 }
