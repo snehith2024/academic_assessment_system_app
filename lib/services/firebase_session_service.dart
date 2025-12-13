@@ -10,6 +10,7 @@ class FirebaseSessionService {
       "faculty": faculty,
       "createdAt": FieldValue.serverTimestamp(),
       "ended": false,
+      "facultyId": faculty,
     });
     return doc.id;
   }
@@ -53,9 +54,10 @@ class FirebaseSessionService {
   }
 
   /// List all sessions
-  Future<QuerySnapshot<Map<String, dynamic>>> listSessions() {
+  Future<QuerySnapshot<Map<String, dynamic>>> listSessions(String facultyId) {
     return db
         .collection("sessions")
+        .where("facultyId", isEqualTo: facultyId)
         .orderBy("createdAt", descending: true)
         .get();
   }

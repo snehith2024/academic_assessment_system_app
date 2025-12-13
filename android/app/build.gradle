@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace "com.example.academic_assessment_system_app"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.academic_assessment_system_app"
-        minSdk 21
-        targetSdk 34
+        minSdk 23
+        targetSdk 35
         versionCode flutter.versionCode
         versionName flutter.versionName
     }
