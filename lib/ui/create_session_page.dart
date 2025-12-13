@@ -68,6 +68,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
       MaterialPageRoute(
         builder: (_) => HistoryPage(
           firebase: widget.firebase,
+          facultyId: widget.facultyName,
         ),
       ),
     );
