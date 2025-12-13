@@ -1,16 +1,167 @@
-# academic_assessment_system_app
+# 📘 **Academic Assessment System – Firebase Version**
 
-A new Flutter project.
+A modern, real-time **student feedback collection system** built with **Flutter**, **Firebase Firestore**, and **Firebase Hosting**.
+This application allows faculty to create assessment sessions, share a link with students, and view responses live on a dashboard.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 **Features**
 
-A few resources to get you started if this is your first Flutter project:
+### 👨‍🏫 **Faculty App (Flutter)**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* Create new assessment sessions
+* Automatically generates a shareable session link
+* View real-time student responses (A/B/C/D)
+* Live pie-chart visualization
+* End & archive sessions
+* View session history
+* All data stored securely in Firebase Firestore
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+### 🎓 **Student Page (Web – Firebase Hosting)**
+
+* Accessible from **mobile/desktop browser**
+* Students submit:
+
+  * Name
+  * Roll number
+  * Understanding level (A/B/C/D)
+* Directly writes responses into Firestore
+* Works globally without needing local servers
+
+---
+
+## 🧱 **Tech Stack**
+
+### **Frontend (App)**
+
+* Flutter 3.x
+* Material 3 UI
+
+### **Backend & Database**
+
+* Firebase Firestore
+* Firebase Hosting (for student HTML page)
+* Firebase Core
+
+### **Storage**
+
+* Firestore collection structure:
+
+```
+sessions/
+   {sessionId}/
+      topic
+      faculty
+      ended
+      createdAt
+      responses/
+          {responseId}/
+              name
+              roll
+              level
+              timestamp
+```
+
+---
+
+## 🗂 **Project Folder Structure**
+
+```
+lib/
+ ├── models/
+ │    ├── session.dart
+ │    └── response.dart
+ ├── services/
+ │    ├── firebase_session_service.dart
+ │    └── local_prefs.dart
+ ├── ui/
+ │    ├── onboarding_page.dart
+ │    ├── create_session_page.dart
+ │    ├── dashboard_page.dart
+ │    └── history_page.dart
+ ├── widgets/
+ │    ├── simple_pie_chart.dart
+ │    └── response_tile.dart
+ ├── app.dart
+ └── main.dart
+
+hosting/
+ ├── student_page.html
+ └── firebase.json
+```
+
+---
+
+## 🔥 **How It Works**
+
+### 1️⃣ **Faculty creates session**
+
+App → Firestore:
+
+```
+sessions/{id}
+```
+
+### 2️⃣ **App generates public link**
+
+Example:
+
+```
+https://academic-assessment-system.web.app/student_page.html?session=SESSION_ID
+```
+
+### 3️⃣ **Students submit responses**
+
+HTML → Firestore:
+
+```
+sessions/{id}/responses/{response}
+```
+
+### 4️⃣ **Dashboard displays real-time updates**
+
+Using Firestore `.snapshots()` stream.
+
+---
+
+## 📦 Installation & Run Instructions
+
+### **1. Install dependencies**
+
+```
+flutter pub get
+```
+
+### **2. Run the app**
+
+```
+flutter run
+```
+
+---
+
+## 🌐 Deploy Student Page to Firebase Hosting
+
+```
+firebase deploy --only hosting
+```
+
+Hosting URL (example):
+
+```
+https://academic-assessment-system.web.app
+```
+
+---
+
+## 📜 License
+
+This project is for educational use and may be extended freely.
+
+---
+
+## ❤️ Contribution
+
+Feel free to open issues or create pull requests.
