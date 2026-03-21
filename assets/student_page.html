@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Submit Response</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f6fb;padding:30px}
+  .container{max-width:420px;margin:auto;background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+  input,select,button{width:100%;padding:14px;margin-top:14px;font-size:16px;border-radius:8px;border:1px solid #ccc}
+  button{background:#2e5f9e;color:#fff;border:0;cursor:pointer;font-weight:700}
+  button:disabled{opacity:.6;cursor:not-allowed}
+  h2{margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Submit Your Response</h2>
+  <input id="name" type="text" placeholder="Your Name" />
+  <input id="roll" type="text" placeholder="Roll Number" />
+  <select id="level">
+    <option value="">Select Response</option>
+    <option value="A">A (Excellent)</option>
+    <option value="B">B (Good)</option>
+    <option value="C">C (Average)</option>
+    <option value="D">D (Poor)</option>
+  </select>
+  <button id="submitBtn" onclick="sendResponse()">Submit</button>
+  <p id="status" style="margin-top:12px;color:#444"></p>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  // <<< REPLACE with your firebase config from firebase console (web app) >>>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEjRWMIYNbfGHOMsEK680_ZKdl0H8vd_c",
+    authDomain: "academic-assessment-system.firebaseapp.com",
+    projectId: "academic-assessment-system",
+    storageBucket: "academic-assessment-system.firebasestorage.app",
+    messagingSenderId: "511834213300",
+    appId: "1:511834213300:web:f9ae67f81e21820e03c0e1",
+    measurementId: "G-E1XV8N3LDL"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  function sessionIdFromPath() {
+    // handle /session/{id} or /session/{id}/ etc.
+    const p = window.location.pathname.replace(/\/+$/, '');
+    const parts = p.split('/');
+    return parts.length >= 3 ? parts[parts.length - 1] : null;
+  }
+
+  async function sendResponse() {
+    const name = document.getElementById('name').value.trim();
+    const roll = document.getElementById('roll').value.trim();
+    const level = document.getElementById('level').value;
+    const statusEl = document.getElementById('status');
+    const btn = document.getElementById('submitBtn');
+
+    if (!name || !roll || !level) {
+      alert('Please fill all fields');
+      return;
+    }
+
+    const sessionId = sessionIdFromPath();
+    if (!sessionId) {
+      alert('Session ID not found in URL. Please use the exact link provided by your instructor.');
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.textContent = 'Submitting...';
+
+    try {
+      const responsesRef = collection(db, 'sessions', sessionId, 'responses');
+      await addDoc(responsesRef, {
+        name,
+        roll,
+        level,
+        timestamp: Date.now()
+      });
+      statusEl.textContent = 'Response submitted — thank you!';
+      btn.disabled = false;
+    } catch (err) {
+      console.error(err);
+      alert('Failed to submit. Please try again.');
+      btn.disabled = false;
+      statusEl.textContent = '';
+    }
+  }
+</script>
+</body>
+</html>

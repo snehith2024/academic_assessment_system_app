@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "511834213300",
+    "firebase_url": "https://academic-assessment-system-default-rtdb.firebaseio.com",
+    "project_id": "academic-assessment-system",
+    "storage_bucket": "academic-assessment-system.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511834213300:android:0b67918bdc3c7c6d03c0e1",
+        "android_client_info": {
+          "package_name": "com.example.academic_assessment_system_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbaDazsJdrHb918NOqlvhAeTO4gZP1gXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

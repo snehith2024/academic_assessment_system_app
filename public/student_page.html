@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Academic Assessment – Student Response</title>
+
+<!-- Firebase SDK (Modular) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEjRWMIYNbfGHOMsEK680_ZKdl0H8vd_c",
+    authDomain: "academic-assessment-system.firebaseapp.com",
+    projectId: "academic-assessment-system",
+    storageBucket: "academic-assessment-system.firebasestorage.app",
+    messagingSenderId: "511834213300",
+    appId: "1:511834213300:web:f9ae67f81e21820e03c0e1",
+    measurementId: "G-E1XV8N3LDL"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ✅ CORRECT WAY → Read sessionId from query param
+  function getSessionId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("session"); // ⚠ Your Flutter link uses ?session=
+  }
+
+  async function sendResponse() {
+    const name = document.getElementById("name").value.trim();
+    const roll = document.getElementById("roll").value.trim();
+    const level = document.getElementById("level").value;
+
+    if (!name || !roll || !level) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const sessionId = getSessionId();
+    if (!sessionId) {
+      alert("Invalid session link!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "sessions", sessionId, "responses"), {
+        name: name,
+        roll: roll,
+        level: level,
+        timestamp: Date.now()
+      });
+
+      alert("Response submitted successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting response: " + err);
+    }
+  }
+
+  window.sendResponse = sendResponse;
+</script>
+
+
+<style>
+    body {
+        background: #f4f6fb;
+        font-family: Arial, sans-serif;
+        padding: 30px;
+        text-align: center;
+    }
+    .container {
+        width: 100%;
+        max-width: 420px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 14px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    button {
+        background: #2e5f9e;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    button:hover { opacity: 0.9; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Submit Your Response</h2>
+
+    <input id="name" type="text" placeholder="Your Name" required />
+    <input id="roll" type="text" placeholder="Roll Number" required />
+
+    <select id="level">
+        <option value="">Select Response</option>
+        <option value="A">A (Excellent)</option>
+        <option value="B">B (Good)</option>
+        <option value="C">C (Average)</option>
+        <option value="D">D (Poor)</option>
+    </select>
+
+    <button id="submitBtn" onclick="sendResponse()">Submit</button>
+</div>
+
+</body>
+</html>
