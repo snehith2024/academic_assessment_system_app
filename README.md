@@ -231,10 +231,3 @@ This project is created for educational and demonstration purposes.
 
 Contact me on: snehith2024@gmail.com
 ---
-
-***
-
-**A few quick tips on the updates:**
-* I changed "Recruiter Notes" to "Technical Highlights (Recruiter Notes)" so it sounds a bit more standard for a public-facing repository, while still catching a hiring manager's eye.
-* I added markdown checkboxes (`* [ ]`) to your "Future Enhancements" section. It gives the impression of an active, ongoing roadmap.
-* I formatted your contact section at the bottom to neatly include your name and an active mailto link.
