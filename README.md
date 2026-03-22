@@ -1,16 +1,16 @@
-# Academic Assessment System 📊  
+# Academic Assessment System
 **Real-time Student Feedback Platform using Flutter & Firebase**
 
 A modern **Flutter + Firebase** application designed to help faculty instantly assess student understanding during a lecture using live responses and analytics.
 
 This project is suitable for:
-- 🎓 **College / B.Tech Final Year Project**
-- 🚀 **Startup MVP**
-- 💼 **Portfolio / Resume / Recruiter Review**
+-  **College / B.Tech Final Year Project**
+-  **Startup MVP**
+-  **Portfolio / Resume / Recruiter Review**
 
 ---
 
-## 🔥 Problem Statement
+##  Problem Statement
 
 Traditional faculty feedback systems are:
 - Delayed
@@ -21,7 +21,7 @@ Faculty have **no real-time insight** into whether students understood a concept
 
 ---
 
-## 💡 Solution
+##  Solution
 
 The **Academic Assessment System** enables:
 - Instant session creation by faculty
@@ -32,9 +32,9 @@ The **Academic Assessment System** enables:
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
-### 👨‍🏫 Faculty
+###  Faculty
 - Secure login (Firebase Authentication)
 - Create topic-based sessions
 - Generate public shareable link
@@ -43,7 +43,7 @@ The **Academic Assessment System** enables:
 - End session & view history
 - Session data visible **only to owner**
 
-### 👨‍🎓 Students
+###  Students
 - No login required
 - Open link from any browser
 - Submit response instantly
@@ -51,7 +51,7 @@ The **Academic Assessment System** enables:
 
 ---
 
-## 🔐 Security Architecture
+##  Security Architecture
 
 | Layer | Security |
 |----|----|
@@ -61,12 +61,12 @@ The **Academic Assessment System** enables:
 | Student Access | Write-only |
 | Hosting | HTTPS (Firebase) |
 
-🔒 **Students cannot read session data**  
-🔒 **Faculty can only read their own sessions**
+ **Students cannot read session data**  
+ **Faculty can only read their own sessions**
 
 ---
 
-## 🧠 Technology Stack
+##  Technology Stack
 
 | Category | Technology |
 |-------|-----------|
@@ -79,7 +79,7 @@ The **Academic Assessment System** enables:
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 ```
 
@@ -96,7 +96,7 @@ Student Web Page (HTML)
 
 ---
 
-## 🗂️ Project Structure
+##  Project Structure
 
 ```
 
@@ -140,7 +140,7 @@ screenshots/
 
 ---
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### 1️⃣ Clone Repository
 
@@ -179,13 +179,13 @@ flutter run
 
 ---
 
-## 📦 APK Export
+##  APK Export
 
 ```bash
 flutter build apk --release
 ```
 
-📍 APK Path:
+ APK Path:
 
 ```
 build/app/outputs/flutter-apk/app-release.apk
@@ -193,7 +193,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ---
 
-## 🎓 Academic Relevance
+##  Academic Relevance
 
 ✔ Real-time systems
 ✔ Cloud computing
@@ -203,7 +203,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ---
 
-## 💼 Recruiter Notes
+##  Recruiter Notes
 
 * Uses **real-time database streams**
 * Proper **authentication & access control**
@@ -213,7 +213,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ---
 
-## 🛠️ Future Enhancements
+##  Future Enhancements
 
 * QR-code based session join
 * CSV / Excel export
@@ -223,7 +223,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ---
 
-## 📜 License
+##  License
 
 This project is created for educational and demonstration purposes.
 
