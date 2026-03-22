@@ -133,7 +133,7 @@ screenshots/
 
 ````
 
- ![Image Alt](https://github.com/snehith2024/academic_assessment_system_app/blob/a88889c53690aaba0c25975d719324b9b7fdf0f3/Dashboard.jpeg?raw=true)
+ ![Image Alt](https://github.com/snehith2024/academic_assessment_system_app/blob/a88889c53690aaba0c25975d719324b9b7fdf0f3/Dashboard.jpeg?raw=true) ![Image Alt](https://github.com/snehith2024/academic_assessment_system_app/blob/071dd62f8e9d93f796a4ba82fe73f79d0f2e57e9/student_feedback_data.jpeg?raw=true)
 
 
 ````
