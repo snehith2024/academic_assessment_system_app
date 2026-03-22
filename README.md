@@ -134,7 +134,8 @@ screenshots/
 ````
 
 ```markdown
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/dashboard.png)![dashboard](https://github.com/user-attachments/assets/ffe51cfb-0169-4732-bb51-b42278b11577)
+
 ````
 
 ---
