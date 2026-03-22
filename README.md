@@ -133,7 +133,7 @@ screenshots/
 
 ````
 
-![dashboard](https://github.com/user-attachments/assets/64d6a8d1-7ac2-4bcb-a031-d7c405bda64e)
+ ![Image Alt]([image_url](https://github.com/snehith2024/academic_assessment_system_app/blob/c86ed5aedfeaf839db9c90a8e507e6db77c4cae0/Dashboard.jpeg))
 
 
 ````
